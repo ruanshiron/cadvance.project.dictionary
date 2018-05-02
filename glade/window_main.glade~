@@ -80,13 +80,25 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSearchEntry" id="searchEntry">
+              <object class="GtkBox" id="search_box">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="primary_icon_name">edit-find-symbolic</property>
-                <property name="primary_icon_activatable">False</property>
-                <property name="primary_icon_sensitive">False</property>
-                <property name="placeholder_text" translatable="yes">Find some words</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkSearchEntry" id="searchEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="primary_icon_name">edit-find-symbolic</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">False</property>
+                    <property name="placeholder_text" translatable="yes">Find some words</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -122,19 +134,12 @@
                     <property name="margin_right">18</property>
                     <property name="margin_top">8</property>
                     <property name="margin_bottom">8</property>
-                    <property name="label" translatable="yes">fjfjdkfj
-dfjdkfjkd
-fdfkdjkfdjf
-dfkdjfkdfjd
-fkdfjdkfjdf
-dfkjdkfdf
-dfkdfjkdjfd
-fldfjkdfjkdfd
-fkdfjkdfjdf
-dfjdkfdjfkdf
-fkjdkfdjfd
-fjdfkdjfkd
-fkdjfdkf</property>
+                    <property name="label" translatable="yes">Nguyễn Thế Vinh
+Đẹp Trai
+Khoai To
+...</property>
+                    <property name="wrap">True</property>
+                    <property name="wrap_mode">word-char</property>
                     <property name="selectable">True</property>
                     <property name="xalign">0.090000003576278687</property>
                   </object>
@@ -153,21 +158,17 @@ fkdjfdkf</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkStatusbar">
+              <object class="GtkLabel" id="statusLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">10</property>
-                <property name="margin_right">10</property>
-                <property name="margin_start">10</property>
-                <property name="margin_end">10</property>
-                <property name="margin_top">6</property>
-                <property name="margin_bottom">6</property>
-                <property name="orientation">vertical</property>
-                <property name="spacing">2</property>
+                <property name="xpad">8</property>
+                <property name="label" translatable="yes">label</property>
+                <property name="xalign">0</property>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
+                <property name="padding">6</property>
                 <property name="position">0</property>
               </packing>
             </child>

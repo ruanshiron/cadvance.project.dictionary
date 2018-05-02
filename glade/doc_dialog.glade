@@ -4,6 +4,7 @@
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkDialog" id="add_dialog">
     <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Add a word</property>
     <property name="default_width">300</property>
     <property name="default_height">300</property>
     <property name="type_hint">dialog</property>
@@ -87,6 +88,7 @@
   </object>
   <object class="GtkDialog" id="del_dialog">
     <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Delete a word</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox">
@@ -103,8 +105,8 @@
             <property name="homogeneous">True</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton">
-                <property name="label" translatable="yes">button</property>
+              <object class="GtkButton" id="ok_del_button">
+                <property name="label" translatable="yes">OK</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -116,8 +118,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton">
-                <property name="label" translatable="yes">button</property>
+              <object class="GtkButton" id="cancel_del_button">
+                <property name="label" translatable="yes">Cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -136,7 +138,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="delete_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Do you want to delele this word?</property>
@@ -153,7 +155,7 @@
   </object>
   <object class="GtkDialog" id="edit_dialog">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Edit</property>
+    <property name="title" translatable="yes">Edit a word</property>
     <property name="default_width">300</property>
     <property name="default_height">300</property>
     <property name="type_hint">dialog</property>
@@ -171,7 +173,7 @@
             <property name="margin_bottom">8</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="okEdit">
+              <object class="GtkButton" id="ok_edit_button">
                 <property name="label" translatable="yes">OK</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -184,7 +186,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="cancelEdit">
+              <object class="GtkButton" id="cancel_edit_button">
                 <property name="label" translatable="yes">Cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -200,34 +202,61 @@
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkEntry" id="edit_word_entry">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">word</property>
+            <property name="can_focus">True</property>
+            <property name="editable">False</property>
+            <property name="text" translatable="yes">Vinh</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="padding">2</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <object class="GtkTextView">
+          <object class="GtkScrolledWindow">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <object class="GtkTextView" id="edit_text_view">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="pixels_above_lines">4</property>
+                <property name="pixels_below_lines">4</property>
+                <property name="pixels_inside_wrap">4</property>
+                <property name="left_margin">8</property>
+                <property name="right_margin">8</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="edit_status_label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="xpad">8</property>
+            <property name="label" translatable="yes">...</property>
+            <property name="xalign">0</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>
     </child>
   </object>
+  <object class="GtkTextBuffer" id="textbuffer1"/>
 </interface>

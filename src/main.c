@@ -164,17 +164,84 @@ static void show_delete_dialog(GtkWidget *widget, gpointer none)
     gtk_widget_destroy (deleteDialog);
 }
 
+static void add_a_word(GtkWidget *widget, gpointer *object)
+{
+    char * word = gtk_entry_get_text(GTK_ENTRY(object[3]));
+    int rsize;
+    if (bfndky(data, word, &rsize)==0) 
+    {
+        char status[255] = "Từ đã tồn tại: ";
+        strcat(status, word);
+        gtk_label_set_text(GTK_LABEL(object[1]), status);
+        return;
+    }
+
+
+    GtkTextIter startIter;
+	GtkTextIter endIter;
+
+    gtk_text_buffer_get_start_iter (gtk_text_view_get_buffer(GTK_TEXT_VIEW(object[0])), &startIter);
+    gtk_text_buffer_get_end_iter (gtk_text_view_get_buffer(GTK_TEXT_VIEW(object[0])), &endIter);
+
+    char * mean =  gtk_text_buffer_get_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(object[0])), &startIter, &endIter, FALSE);
+    int i=0, l=strlen(mean), blank=1;
+    while (i<l)
+    {
+        if (!((mean[i]==' ') || (mean[i]=='\n'))) { blank=0; break;}
+        else i++;
+    }
+
+    if (blank)  gtk_label_set_text(GTK_LABEL(object[1]), "Không được bỏ trống");
+    else 
+    {
+        int result = btins(data, curWord, mean, strlen(mean) + 1);
+        if (!result) 
+        {
+            gtk_label_set_text(GTK_LABEL(statusLabel), "Thêm thành công!");
+            gtk_label_set_text(GTK_LABEL(meanLabel), mean);
+        }
+        else gtk_label_set_text(GTK_LABEL(statusLabel), "Có lỗi bất ngờ xẩy ra!");
+        gtk_widget_destroy (object[2]);
+    }
+}
+
 static void show_add_dialog(GtkWidget *widget, gpointer none)
 {
      /** Make About_Dialog*/
     GtkBuilder      *builder;
-    GtkWidget       *aboutDialog;
+    GtkWidget       *addDialog;
     builder = gtk_builder_new();
     gtk_builder_add_from_file (builder, "glade/doc_dialog.glade", NULL);
-    aboutDialog = GTK_WIDGET(gtk_builder_get_object(builder, "add_dialog"));
-    gtk_window_set_transient_for(GTK_WINDOW(aboutDialog), GTK_WINDOW(window));
-    gtk_dialog_run(aboutDialog);
-    gtk_widget_destroy (aboutDialog);
+    addDialog = GTK_WIDGET(gtk_builder_get_object(builder, "add_dialog"));
+    gtk_window_set_transient_for(GTK_WINDOW(addDialog), GTK_WINDOW(window));
+
+    g_stpcpy (curWord, gtk_entry_get_text(searchEntry));
+
+    GObject     *OKButton;
+    GObject     *CancelButton;
+    GObject     *WordEntry;
+    GObject     *MeanTextView;
+    GObject     *AddStatus;
+
+    OKButton = gtk_builder_get_object(builder, "ok_add_button");
+    CancelButton = gtk_builder_get_object(builder, "cancel_add_button");
+    WordEntry = gtk_builder_get_object(builder, "add_word_entry");
+    MeanTextView = gtk_builder_get_object(builder, "add_text_view");
+    AddStatus = gtk_builder_get_object(builder, "add_status_label");
+
+    GObject     *object_use[4];
+    object_use[0] = MeanTextView;
+    object_use[1] = AddStatus;
+    object_use[2] = G_OBJECT(addDialog);
+    object_use[3] = WordEntry;
+
+    g_signal_connect (OKButton, "clicked", G_CALLBACK (add_a_word), object_use);
+    g_signal_connect (CancelButton, "clicked", G_CALLBACK (destroy_dialog), addDialog);
+    gtk_entry_set_text(GTK_ENTRY(WordEntry), curWord);
+
+    //show & destroy
+    gtk_dialog_run(addDialog);
+    gtk_widget_destroy (addDialog);
 }
 
 static void search_entry_activate(GtkEntry *entry, gpointer none)
@@ -191,12 +258,35 @@ static void search_entry_activate(GtkEntry *entry, gpointer none)
 		gtk_label_set_label(GTK_LABEL(meanLabel), mean);
 }
 
+static void edit_or_add(GtkWidget *widget, gpointer none)
+{
+    g_stpcpy (curWord, gtk_entry_get_text(searchEntry));
+
+    int i=0, l=strlen(curWord), blank=1;
+    while (i<l)
+    {
+        if (!((curWord[i]==' '))) {blank=0; break;}
+        else i++;
+    }
+
+    int rsize;
+    if (blank) show_add_dialog(widget, NULL);
+    else if (bfndky(data, curWord, &rsize)!=0) show_add_dialog(widget, NULL);
+    else show_edit_dialog(widget, NULL);
+}
+
 static void key_press(GtkWidget *searchBox, GdkEvent *event, gpointer none)
 {
     GdkEventKey *keyEvent = (GdkEventKey*)event;
+    g_stpcpy (curWord, gtk_entry_get_text(searchEntry));
     if (keyEvent->keyval == GDK_KEY_Tab) 
     {
-        gtk_entry_set_text (GTK_ENTRY(searchEntry), "Vinh");
+        int value;
+        if (bfndky(data, curWord, &value)) btins(data, curWord, "", 1); 
+
+        
+        bnxtky(data, curWord, &value);
+        gtk_entry_set_text (GTK_ENTRY(searchEntry), curWord);
         //gtk_editable_set_position(GTK_EDITABLE(entry), 5);
         gtk_widget_grab_focus(GTK_WIDGET(searchEntry));
     }
@@ -238,7 +328,7 @@ int main(int argc, char *argv[])
     //edit/Add Button
     GObject     *editButton;
     editButton = gtk_builder_get_object(builder, "editButton");
-    g_signal_connect (editButton, "clicked", G_CALLBACK (show_edit_dialog), NULL);
+    g_signal_connect (editButton, "clicked", G_CALLBACK (edit_or_add), NULL);
 
     //Add Menu Item
     GObject     *addItem;

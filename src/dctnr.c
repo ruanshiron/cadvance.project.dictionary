@@ -51,3 +51,56 @@ int convert_text_to_bt(char * filename)
     return 1;
 }
 
+int existed_word(BTA * data, char * word)
+{
+    int rsize;
+    if (bfndky(data, word, &rsize)==0) return 1;
+    else return 0;
+}
+
+int find_meaning_word(BTA * data, char * word, char * mean)
+{
+    int rsize;
+    btsel(data, word, mean, MEAN_MAX, &rsize);
+    printf("result for find %s: %d\n", word, rsize);
+    return rsize;
+}
+
+int delete_meaning_word(BTA * data, char * word)
+{
+    int r = btdel(data, word);
+    return r;
+}
+
+int find_next_word(BTA * data, char *word)
+{
+    int value;
+    int r = bnxtky(data, word, &value);
+    return !value;
+}
+
+int add_a_word(BTA * data, char * word, char * mean)
+{
+    int r = btins(data, word, mean, strlen(mean) + 1);
+    return r;
+}
+
+int update_a_word(BTA * data, char * word, char * mean)
+{
+    int r = btupd(data, word, mean, strlen(mean) + 1);
+    return r;
+}
+
+int isBlank(char * text)
+{
+    int i=0, l=strlen(text);
+    while (i<l)
+    {
+        if (!((text[i]==' ') || (text[i]=='\n'))) 
+        {  
+            return 0;
+        }
+        else i++;
+    }
+    return 1;
+}
